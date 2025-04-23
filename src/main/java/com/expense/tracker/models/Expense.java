@@ -1,11 +1,22 @@
 package com.expense.tracker.models;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 public class Expense {
+
     private String description;
     private double amount;
-    private LocalDateTime date;
+    private LocalDate date;
+
+    public Expense() {
+        this.date = LocalDate.now();
+    }
+
+    public Expense(String description, double amount) {
+        this.description = description;
+        this.amount = amount;
+        this.date = LocalDate.now();
+    }
 
     public String getDescription() {
         return description;
@@ -23,11 +34,11 @@ public class Expense {
         this.amount = amount;
     }
 
-    public LocalDateTime getDate() {
+    public LocalDate getDate() {
         return date;
     }
 
-    public void setDate(LocalDateTime date) {
+    public void setDate(LocalDate date) {
         this.date = date;
     }
 

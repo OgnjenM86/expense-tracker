@@ -1,9 +1,7 @@
 package com.expense.tracker;
 
-
 import com.expense.tracker.models.Expense;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -13,8 +11,8 @@ public class Main {
     private static List<Expense> expenses = new ArrayList<>();
 
     public static void main(String[] args) {
-
         printMenu();
+
         while (true) {
 
             int cmd = scanner.nextInt();
@@ -31,36 +29,32 @@ public class Main {
                 case 4:
                     return;
             }
-
         }
-
     }
 
     private static void printMenu() {
-        System.out.println("\n=== Expense Tracker === ");
+        System.out.println("\n=== Welcome to Expense Tracker ===\n");
+        System.out.print("Available commands are:");
         System.out.println("1. Add expense");
         System.out.println("2. List Expenses");
         System.out.println("3. View Total Spent");
         System.out.println("4. Exit");
-        System.out.print("Choose an option: ");
+        System.out.println("Choose one to proceed:");
     }
 
     public static void addExpenses() {
-        System.out.println("Enter description:");
+        System.out.println("Enter expense description:");
         String description = scanner.next();
-        System.out.println("Enter amount:");
+        System.out.println("Enter expense amount:");
         int amount = scanner.nextInt();
-        System.out.println("Enter date:");
-        LocalDateTime date = LocalDateTime.now();
+
         Expense e1 = new Expense();
 
         e1.setDescription(description);
         e1.setAmount(amount);
-        e1.setDate(date);
-        expenses.add(e1);//adding object e1 to the list expenses
+        expenses.add(e1); // adding object e1 to the list expenses
 
-
-        System.out.println("Expense added successfully: " + e1);
+        System.out.println("Expense successfully saved: " + e1);
     }
 
     public static void ListExpenses() {
@@ -68,7 +62,6 @@ public class Main {
         System.out.println("Description\tAmount\tDate");
         for (Expense expense : expenses) {
             System.out.println(expense.getDescription() + "\t" + expense.getAmount() + "\t" + expense.getDate());
-
         }
     }
 
