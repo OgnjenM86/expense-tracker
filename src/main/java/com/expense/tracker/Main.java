@@ -3,7 +3,7 @@ package com.expense.tracker;
 
 import com.expense.tracker.models.Expense;
 
-import java.io.IOException;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -33,6 +33,7 @@ public class Main {
 
 
                     addExpenses();
+                    fileWriter();
                     break;
                 case 2:
                     ListExpenses();
@@ -105,6 +106,20 @@ public class Main {
             System.out.println("File isn't created");
             return false;
         }
+
+    }
+    public  static  void  fileWriter(){
+        try( PrintWriter writer = new PrintWriter(CSV_FILE)) {
+           {
+               for (Expense expense : expenses){
+                   writer.write(String.valueOf(expense));
+               }
+                }
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
 
     }
 }
