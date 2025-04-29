@@ -2,12 +2,11 @@ package com.expense.tracker;
 
 import com.expense.tracker.models.Expense;
 
-import java.io.*;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -18,23 +17,16 @@ public class Main {
     private static List<Expense> expenses = new ArrayList<>();
 
     public static void main(String[] args) throws IOException {
-
         printMenu();
 
         while (true) {
-
             int cmd = scanner.nextInt();
             switch (cmd) {
                 case 1:
-
-
                     if (!doesCsvFileExists()) {
                         createFile();
                     }
-
-
                     addExpenses();
-
                     break;
                 case 2:
                     ListExpenses();
@@ -62,22 +54,19 @@ public class Main {
         System.out.println("Enter expense description:");
         String description = scanner.next();
         System.out.println("Enter expense amount:");
-        int amount = scanner.nextInt();
-        LocalDateTime date = LocalDateTime.now();
-        Expense e1 = new Expense();
 
-        e1.setDescription(description);
-        e1.setAmount(amount);
-        e1.setDate(date);
+        double amount = Double.parseDouble(scanner.next());
+
+        Expense e1 = new Expense(description, amount);
 
         try {
             var newRow = e1 + System.lineSeparator();
-            Files.write(Path.of(CSV_FILE) , newRow.getBytes(), StandardOpenOption.APPEND);
+            Files.write(Path.of(CSV_FILE), newRow.getBytes(), StandardOpenOption.APPEND);
         } catch (IOException e) {
             e.printStackTrace();
         }
-            System.out.println("Expense added successfully: " + e1);
-        }
+        System.out.println("Expense added successfully: " + e1);
+    }
 
     public static void ListExpenses() {
         System.out.println("Expenses:");
@@ -100,16 +89,7 @@ public class Main {
     }
 
     public static boolean doesCsvFileExists() {
-        Path path = Paths.get(CSV_FILE);
-        if (Files.exists(path)) {
-            System.out.println("File is created ");
-            return true;
-        } else {
-            System.out.println("File isn't created");
-            return false;
-        }
-
+        return Files.exists(Paths.get(CSV_FILE));
     }
-
 }
 
