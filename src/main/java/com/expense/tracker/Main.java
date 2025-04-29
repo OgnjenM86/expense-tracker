@@ -7,6 +7,7 @@ import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -33,7 +34,7 @@ public class Main {
 
 
                     addExpenses();
-                    fileWriter();
+
                     break;
                 case 2:
                     ListExpenses();
@@ -63,18 +64,22 @@ public class Main {
         String description = scanner.next();
         System.out.println("Enter amount:");
         int amount = scanner.nextInt();
-        System.out.println("Enter date:");
         LocalDateTime date = LocalDateTime.now();
         Expense e1 = new Expense();
 
         e1.setDescription(description);
         e1.setAmount(amount);
         e1.setDate(date);
-        expenses.add(e1);//adding object e1 to the list expenses
 
+        try {
+            var newRow = e1 + System.lineSeparator();
+            Files.write(Path.of(CSV_FILE) , newRow.getBytes(), StandardOpenOption.APPEND);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+            System.out.println("Expense added successfully: " + e1);
+        }
 
-        System.out.println("Expense added successfully: " + e1);
-    }
 
     public static void ListExpenses() {
         System.out.println("Expenses:");
@@ -94,7 +99,7 @@ public class Main {
     }
 
     public static void createFile() throws IOException {
-        Files.writeString(Paths.get(CSV_FILE), "description;amount;date;");
+        Files.writeString(Paths.get(CSV_FILE), "description;amount;date;" + System.lineSeparator());
     }
 
     public static boolean doesCsvFileExists() {
@@ -108,19 +113,6 @@ public class Main {
         }
 
     }
-    public  static  void  fileWriter(){
-        try( PrintWriter writer = new PrintWriter(CSV_FILE)) {
-           {
-               for (Expense expense : expenses){
-                   writer.write(String.valueOf(expense));
-               }
-                }
 
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-
-
-    }
 }
 
