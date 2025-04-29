@@ -2,15 +2,23 @@ package com.expense.tracker;
 
 import com.expense.tracker.models.Expense;
 
+import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
 public class Main {
     public static final Scanner scanner = new Scanner(System.in);
+    private static final String CSV_FILE = "Expenses.csv";
     private static List<Expense> expenses = new ArrayList<>();
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
+
         printMenu();
 
         while (true) {
@@ -18,7 +26,15 @@ public class Main {
             int cmd = scanner.nextInt();
             switch (cmd) {
                 case 1:
+
+
+                    if (!doesCsvFileExists()) {
+                        createFile();
+                    }
+
+
                     addExpenses();
+
                     break;
                 case 2:
                     ListExpenses();
@@ -47,15 +63,21 @@ public class Main {
         String description = scanner.next();
         System.out.println("Enter expense amount:");
         int amount = scanner.nextInt();
-
+        LocalDateTime date = LocalDateTime.now();
         Expense e1 = new Expense();
 
         e1.setDescription(description);
         e1.setAmount(amount);
-        expenses.add(e1); // adding object e1 to the list expenses
+        e1.setDate(date);
 
-        System.out.println("Expense successfully saved: " + e1);
-    }
+        try {
+            var newRow = e1 + System.lineSeparator();
+            Files.write(Path.of(CSV_FILE) , newRow.getBytes(), StandardOpenOption.APPEND);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+            System.out.println("Expense added successfully: " + e1);
+        }
 
     public static void ListExpenses() {
         System.out.println("Expenses:");
@@ -72,4 +94,22 @@ public class Main {
         }
         return total;
     }
+
+    public static void createFile() throws IOException {
+        Files.writeString(Paths.get(CSV_FILE), "description;amount;date;" + System.lineSeparator());
+    }
+
+    public static boolean doesCsvFileExists() {
+        Path path = Paths.get(CSV_FILE);
+        if (Files.exists(path)) {
+            System.out.println("File is created ");
+            return true;
+        } else {
+            System.out.println("File isn't created");
+            return false;
+        }
+
+    }
+
 }
+
