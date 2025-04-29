@@ -1,38 +1,36 @@
 package com.expense.tracker.models;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
+/**
+ * Expense is immutable class that represents an expense.
+ */
 public class Expense {
-    private String description;
-    private double amount;
-    private LocalDateTime date;
+
+    private final LocalDate date;
+    private final String description;
+    private final double amount;
+
+    public Expense(String description, double amount) {
+        this.description = description;
+        this.amount = amount;
+        this.date = LocalDate.now();
+    }
 
     public String getDescription() {
         return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
     }
 
     public double getAmount() {
         return amount;
     }
 
-    public void setAmount(double amount) {
-        this.amount = amount;
-    }
-
-    public LocalDateTime getDate() {
+    public LocalDate getDate() {
         return date;
-    }
-
-    public void setDate(LocalDateTime date) {
-        this.date = date;
     }
 
     @Override
     public String toString() {
-        return String.format("%s;%.2f;%s", description,amount,date);
+        return String.format("%s;%.2f;%s", description, amount, date);
     }
 }
