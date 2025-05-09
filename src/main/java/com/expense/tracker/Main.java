@@ -2,6 +2,7 @@ package com.expense.tracker;
 
 import com.expense.tracker.models.Expense;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -32,6 +33,7 @@ public class Main {
                     ListExpenses();
                     break;
                 case 3:
+
                     System.out.println("Total spent: " + totalSpent());
                     break;
                 case 4:
@@ -68,17 +70,23 @@ public class Main {
         System.out.println("Expense added successfully: " + e1);
     }
 
-    public static void ListExpenses() {
+    public static void ListExpenses()throws  IOException {
         System.out.println("Expenses:");
         System.out.println("Description\tAmount\tDate");
-        for (Expense expense : expenses) {
-            System.out.println(expense.getDescription() + "\t" + expense.getAmount() + "\t" + expense.getDate());
-        }
+        //TODO ovde treba da pozovem metodu readingfile
+        // ona ca da mi vrati string
+        // ja treba da taj string da parsiram da bude red po red
+        // zatim parsiram svak irfed u kolone
+        // kolone delim ;
+        //
+       String fileContent = readFile();
+        System.out.println(fileContent);
     }
 
     public static double totalSpent() {
+
         double total = 0;
-        for (Expense expense : expenses) {
+        for (Expense expense : expenses ) {
             total = total + expense.getAmount();
         }
         return total;
@@ -91,5 +99,10 @@ public class Main {
     public static boolean doesCsvFileExists() {
         return Files.exists(Paths.get(CSV_FILE));
     }
+    public  static  String  readFile()throws  IOException {
+        return Files.readString(Path.of(CSV_FILE));
+
+    }
+
 }
 

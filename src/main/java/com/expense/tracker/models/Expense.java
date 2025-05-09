@@ -31,6 +31,6 @@ public class Expense {
 
     @Override
     public String toString() {
-        return String.format("%s;%.2f;%s", description, amount, date);
+        return String.format("Description: %s;Amount: %.2f; Date: %s", description, amount, date);
     }
 }
