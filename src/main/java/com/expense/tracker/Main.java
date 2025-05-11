@@ -40,8 +40,10 @@ public class Main {
                 case 3:
                     if (!doesCsvFileExists()) {
                         createFile();
+                        System.out.println("You don't have any spending.");
+                    } else {
+                        System.out.println("Total spent: " + totalSpent());
                     }
-                    System.out.println("Total spent: " + totalSpent());
                     break;
                 case 4:
                     return;
@@ -108,8 +110,6 @@ public class Main {
 
     public static String readFile() throws IOException {
         return Files.readString(Path.of(CSV_FILE));
-
     }
-
 }
 
