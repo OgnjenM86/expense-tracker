@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
+
 public class Main {
     public static final Scanner scanner = new Scanner(System.in);
     private static final String CSV_FILE = "Expenses.csv";
@@ -29,10 +30,20 @@ public class Main {
                     addExpenses();
                     break;
                 case 2:
-                    ListExpenses();
+                    if (!doesCsvFileExists()) {
+                        createFile();
+                        System.out.println("you don't have any expenses");
+                    } else {
+                        ListExpenses();
+                    }
                     break;
                 case 3:
-                    System.out.println("Total spent: " + totalSpent());
+                    if (!doesCsvFileExists()) {
+                        createFile();
+                        System.out.println("You don't have any spending.");
+                    } else {
+                        System.out.println("Total spent: " + totalSpent());
+                    }
                     break;
                 case 4:
                     return;
@@ -68,11 +79,16 @@ public class Main {
         System.out.println("Expense added successfully: " + e1);
     }
 
-    public static void ListExpenses() {
+    public static void ListExpenses() throws IOException {
         System.out.println("Expenses:");
-        System.out.println("Description\tAmount\tDate");
-        for (Expense expense : expenses) {
-            System.out.println(expense.getDescription() + "\t" + expense.getAmount() + "\t" + expense.getDate());
+
+        String fileContent = readFile();
+        String[] rows = fileContent.split(System.lineSeparator());
+        for (String row : rows) {
+
+            row = row.replace(";", "\t");
+
+            System.out.println(row);
         }
     }
 
@@ -90,6 +106,10 @@ public class Main {
 
     public static boolean doesCsvFileExists() {
         return Files.exists(Paths.get(CSV_FILE));
+    }
+
+    public static String readFile() throws IOException {
+        return Files.readString(Path.of(CSV_FILE));
     }
 }
 
