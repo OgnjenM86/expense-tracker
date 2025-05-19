@@ -2,14 +2,13 @@ package com.expense.tracker;
 
 import com.expense.tracker.models.Expense;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 
 
 public class Main {
@@ -17,36 +16,49 @@ public class Main {
     private static final String CSV_FILE = "Expenses.csv";
     private static List<Expense> expenses = new ArrayList<>();
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) {
         printMenu();
-
         while (true) {
-            int cmd = scanner.nextInt();
-            switch (cmd) {
-                case 1:
-                    if (!doesCsvFileExists()) {
-                        createFile();
-                    }
-                    addExpenses();
-                    break;
-                case 2:
-                    if (!doesCsvFileExists()) {
-                        createFile();
-                        System.out.println("you don't have any expenses");
-                    } else {
-                        ListExpenses();
-                    }
-                    break;
-                case 3:
-                    if (!doesCsvFileExists()) {
-                        createFile();
-                        System.out.println("You don't have any spending.");
-                    } else {
-                        System.out.println("Total spent: " + totalSpent());
-                    }
-                    break;
-                case 4:
-                    return;
+            try {
+                int cmd = scanner.nextInt();
+                switch (cmd) {
+                    case 1:
+                        if (!doesCsvFileExists()) {
+                            createFile();
+                        }
+                        addExpenses();
+                        break;
+                    case 2:
+                        if (!doesCsvFileExists()) {
+                            createFile();
+                            System.out.println("you don't have any expenses");
+                        } else {
+                            ListExpenses();
+                        }
+                        break;
+                    case 3:
+                        if (!doesCsvFileExists()) {
+                            createFile();
+                            System.out.println("You don't have any spending.");
+                        } else {
+                            System.out.println("Total spent: " + totalSpent());
+                        }
+                        break;
+                    case 4:
+                        return;
+                }
+            } catch (InputMismatchException e) {
+                System.out.println("Invalid input! Please enter a number from 1-4.");
+            } catch (NumberFormatException e) {
+                System.out.println("Amount must be a valid number");
+            } catch (FileNotFoundException e) {
+                System.out.println("File not found:" + e.getMessage());
+            } catch (NullPointerException e) {
+                System.out.println("Null object error");
+            } catch (IllegalFormatException e) {
+                System.out.println("Invalid number!Please enter the postive number");
+            } catch (Exception e) {
+                System.out.println("Unexpected error: " + e.getMessage());
             }
         }
     }
@@ -65,11 +77,8 @@ public class Main {
         System.out.println("Enter expense description:");
         String description = scanner.next();
         System.out.println("Enter expense amount:");
-
         double amount = Double.parseDouble(scanner.next());
-
         Expense e1 = new Expense(description, amount);
-
         try {
             var newRow = e1 + System.lineSeparator();
             Files.write(Path.of(CSV_FILE), newRow.getBytes(), StandardOpenOption.APPEND);
@@ -93,11 +102,12 @@ public class Main {
     }
 
     public static double totalSpent() {
+
         double total = 0;
         for (Expense expense : expenses) {
             total = total + expense.getAmount();
         }
-        return total;
+        return 0;
     }
 
     public static void createFile() throws IOException {
