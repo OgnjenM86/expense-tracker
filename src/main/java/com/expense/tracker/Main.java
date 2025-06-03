@@ -15,7 +15,7 @@ public class Main {
     public static final Scanner scanner = new Scanner(System.in);
     private static final String CSV_FILE = "Expenses.csv";
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) {
         printMenu();
 
         while (true) {
@@ -25,13 +25,13 @@ public class Main {
                     System.out.println("Waiting for your command...");
                     break;
                 case 1:
-                    if (fileExists()) {
+                    if (missingCsvFile()) {
                         createFile();
                     }
                     addExpenses();
                     break;
                 case 2:
-                    if (fileExists()) {
+                    if (missingCsvFile()) {
                         createFile();
                         System.out.println("you don't have any expenses");
                     } else {
@@ -39,7 +39,7 @@ public class Main {
                     }
                     break;
                 case 3:
-                    if (fileExists()) {
+                    if (missingCsvFile()) {
                         createFile();
                         System.out.println("You don't have any spending.");
                     } else {
@@ -85,7 +85,7 @@ public class Main {
         System.out.println("Expense added successfully: " + expense);
     }
 
-    private static void listExpenses() throws IOException {
+    private static void listExpenses() {
         System.out.println("Expenses:");
 
         String fileContent = readFile();
@@ -110,16 +110,24 @@ public class Main {
         return total;
     }
 
-    private static void createFile() throws IOException {
-        Files.writeString(Paths.get(CSV_FILE), "description;amount;date;" + System.lineSeparator());
+    private static void createFile() {
+        try {
+            Files.writeString(Paths.get(CSV_FILE), "description;amount;date;" + System.lineSeparator());
+        } catch (IOException e) {
+            throw new RuntimeException("Unexpected error occurred while creating csv file", e);
+        }
     }
 
-    private static boolean fileExists() {
+    private static boolean missingCsvFile() {
         return !Files.exists(Paths.get(CSV_FILE));
     }
 
-    private static String readFile() throws IOException {
-        return Files.readString(Path.of(CSV_FILE));
+    private static String readFile() {
+        try {
+            return Files.readString(Path.of(CSV_FILE));
+        } catch (IOException e) {
+            throw new RuntimeException("Unexpected error occurred while reading csf file", e);
+        }
     }
 
     private static int nextIntCommand() {
