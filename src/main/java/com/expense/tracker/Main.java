@@ -7,6 +7,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
+import java.util.OptionalDouble;
 import java.util.Scanner;
 
 
@@ -66,14 +67,14 @@ public class Main {
         String description = scanner.next();
         System.out.println("Enter expense amount:");
 
-        double amount = nextDoubleCommand();
-        if (Double.MIN_VALUE == amount) {
+        OptionalDouble amount = nextDoubleCommand();
+        if (amount.isEmpty()) {
             System.out.println("Invalid amount. Please enter a valid decimal number.");
             System.out.println("For example: 12.34 or 100");
             return;
         }
 
-        Expense expense = new Expense(description, amount);
+        Expense expense = new Expense(description, amount.getAsDouble());
 
         try {
             var newRow = expense + System.lineSeparator();
@@ -130,11 +131,11 @@ public class Main {
         }
     }
 
-    private static Double nextDoubleCommand() {
+    private static OptionalDouble nextDoubleCommand() {
         try {
-            return Double.parseDouble(scanner.next());
+            return OptionalDouble.of(Double.parseDouble(scanner.next()));
         } catch (NumberFormatException e) {
-            return Double.MIN_VALUE;
+            return OptionalDouble.empty();
         }
     }
 }
